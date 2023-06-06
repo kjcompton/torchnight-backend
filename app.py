@@ -13,7 +13,7 @@ app.register_blueprint(users, url_prefix='/api/v1/users')
 
 @app.before_request
 def before_request():
-    g.db = models.DATBASE
+    g.db = models.DATABASE
     g.db.connect()
 
 
@@ -22,10 +22,11 @@ def after_request(response):
     g.db.close()
     return response
 
-
+# Health Check
 @app.route('/')
 def index():
-    return 'Hello World'
+    return 'Server is running'
+
 
 # Run app when it starts
 if __name__ == '__main__':
