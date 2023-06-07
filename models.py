@@ -1,9 +1,10 @@
 from peewee import *
 import datetime
+from flask_login import UserMixin
 
-DATABASE = SqliteDatabase('dogs.sqlite')
+DATABASE = SqliteDatabase('test.sqlite')
 
-class User(Model):
+class User(UserMixin, Model):
     username = CharField(unique=True)
     email = CharField(unique=True)
     password = CharField()
@@ -11,8 +12,14 @@ class User(Model):
     class Meta:
         database = DATABASE
 
+class Character(Model):
+    name = CharField()
+
+    class Meta:
+        database = DATABASE
+
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User], safe=True)
+    DATABASE.create_tables([User, Character], safe=True)
     print("Connected to DB and create tables IF they don't exist")
     DATABASE.close()

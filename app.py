@@ -1,14 +1,30 @@
 from flask import Flask, jsonify, g
 from flask_cors import CORS
+from flask_login import LoginManager
+from dotenv import load_dotenv
+from resources.users import users
+from resources.characters import characters
 
 import models
-from resources.users import users
+import os
+
+load_dotenv()
+
+login_manager = LoginManager()
 
 app = Flask(__name__)
 
-CORS(users, origins=['http://localhost:3000'], supports_credentials=True)
+app.secret_key = os.environ.get("APP_SECRET")
 
-app.register_blueprint(users, url_prefix='/api/v1/users')
+login_manager.init_app(app)
+
+
+@login_manager.user_loader
+def load_user(userid):
+    try:
+        return models.User.get(models.User.id == userid)
+    except:
+        return None
 
 
 @app.before_request
@@ -26,6 +42,13 @@ def after_request(response):
 @app.route('/')
 def index():
     return 'Server is running'
+
+
+CORS(users, origins=['http://localhost:3000'], supports_credentials=True)
+app.register_blueprint(users, url_prefix='/users')
+
+CORS(characters, origins=['http://localhost:3000'], supports_credentials=True)
+app.register_blueprint(characters, url_prefix='/api/v1/characters')
 
 
 # Run app when it starts
