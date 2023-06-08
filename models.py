@@ -7,6 +7,7 @@ import datetime
 # Local
 # DATABASE = SqliteDatabase('test.sqlite')
 
+# Added the Database URL env
 DATABASE = connect(os.environ.get('DATABASE_URL') or 'sqlite:///test.sqlite')
 # Connect to the database URL defined in the environment, falling
 # back to a local Sqlite database if no database URL is specified.
