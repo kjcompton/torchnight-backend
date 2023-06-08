@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, g
+from flask import Flask, jsonify, g, after_this_request
 from flask_cors import CORS
 from flask_login import LoginManager
 from dotenv import load_dotenv
@@ -32,11 +32,11 @@ def before_request():
     g.db = models.DATABASE
     g.db.connect()
 
+    @after_this_request
+    def after_request(response):
+        g.db.close()
+        return response
 
-@app.after_request
-def after_request(response):
-    g.db.close()
-    return response
 
 # Health Check
 @app.route('/')
@@ -56,3 +56,9 @@ if __name__ == '__main__':
     # when we start the app, set up our DB/tables as defined in models.py
     models.initialize()
     app.run(debug=True, port=8000)
+
+# ADD THESE THREE LINES -- because we need to initialize the
+# tables in production too!
+if os.environ.get('FLASK_ENV') != 'development':
+  print('\non heroku!')
+  models.initialize()

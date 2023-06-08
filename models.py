@@ -1,7 +1,16 @@
 from peewee import *
+import os
+from playhouse.db_url import connect
 import datetime
 
-DATABASE = SqliteDatabase('test.sqlite')
+# Local
+# DATABASE = SqliteDatabase('test.sqlite')
+
+DATABASE = connect(os.environ.get('DATABASE_URL') or 'sqlite:///test.sqlite')
+# Connect to the database URL defined in the environment, falling
+# back to a local Sqlite database if no database URL is specified.
+
+
 
 class User( Model):
     username = CharField(unique=True)
