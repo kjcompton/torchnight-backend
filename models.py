@@ -3,8 +3,8 @@ import os
 from playhouse.db_url import connect
 import datetime
 # test
-# test test
-# Local
+# test test test
+# Local 
 # DATABASE = SqliteDatabase('test.sqlite')
 
 # Added the Database URL env
