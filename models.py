@@ -14,6 +14,7 @@ class User(UserMixin, Model):
 
 class Character(Model):
     name = CharField()
+    user = ForeignKeyField(User, backref='characters')
 
     class Meta:
         database = DATABASE
