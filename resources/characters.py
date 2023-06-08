@@ -7,23 +7,23 @@ characters = Blueprint('characters', 'character')
 
 @characters.route("/", methods=["GET"])
 def get_all_characters():
-    try:
-        characters = [model_to_dict(characters) for characters in models.Character.select()]
-        print(characters)
-        return jsonify(data = characters, status={"code": 200, "message": "Success"})
-    except:
-        return jsonify(data={}, status={"code": 401, "message": "Error getting the resources"})
+    characters = [model_to_dict(character) for character in models.Character.select()]
+    return jsonify(
+        data=characters, 
+        status={"code": 200, "message": "Success"})
 
-# Create
+# Create character
 @characters.route("/", methods=["POST"])
 def create_character():
     payload = request.get_json()
+    print("THEEEE PAYLOAD!!!!")
     print(payload)
-    new_character = models.Character.create(**payload)
+    new_character = models.Character.create(name=payload["name"], owner=payload["id"])
     print(new_character)
 
     character_dict = model_to_dict(new_character)
 
+    print(character_dict)
 
     
     return jsonify(

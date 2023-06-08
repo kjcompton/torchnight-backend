@@ -16,7 +16,7 @@ def get_all_users():
     except:
         return jsonify(data={}, status={"code": 401, "message": "Error getting the resources"})
 
-# Route for registering the user
+# Route for registering/creating the user
 @users.route("/register", methods=["POST"])
 def register():
     payload = request.get_json()
@@ -41,7 +41,6 @@ def register():
             password = pw_hash            
         )
 
-        login_user(created_user)
 
         created_user_dict = model_to_dict(created_user)
 
@@ -54,60 +53,6 @@ def register():
             message = f"Registered user: {created_user_dict['email']}",
             status = 201
         ), 201
-
-
-@users.route("/login", methods=["POST"])
-def login():
-    payload = request.get_json()
-    payload["email"] = payload["email"].lower()
-    payload["username"] = payload["username"].lower()
-
-    try:
-        user = models.User.get(models.User.email == payload["email"])
-
-        # if the user exists
-        user_dict = model_to_dict(user)
-
-        # set password boolean value
-        password_is_good = check_password_hash(user_dict["password"], payload["password"])
-
-        # check if password is correct
-        if (password_is_good):
-            # Log the user in using flask_login
-            login_user(user)
-            print(f"{current_user.username}: this is current_user.username in the POST login")
-
-            return jsonify(
-                data = user_dict,
-                message = f"{user_dict['email']} has successfully logged in!",
-                status = 200
-            ), 200
-        else:
-            print("Password is incorrect")
-            return jsonify(
-                data = {},
-                message = "The email and/or password is incorrect",
-                status = 401
-            ), 401
-    except models.DoesNotExist:
-
-        # if the user does not exist
-        print("Email is not found")
-
-        return jsonify(
-                data = {},
-                message = "The email and/or password is incorrect",
-                status = 401
-            ), 401
-
-# Create
-@users.route("/", methods=["POST"])
-def create_users():
-    payload = request.get_json()
-    new_user = models.User.create(**payload)
-    print(payload)
-    return jsonify(payload)
-
 
 # Find/Show
 @users.route('/<id>', methods=["GET"])
@@ -126,7 +71,7 @@ def get_user(id):
 @users.route("/<id>", methods=["PUT"])
 def update_user(id):
     payload = request.get_json()
-    query = models.User.update(**payload).where(models.Dog.id == id)
+    query = models.User.update(**payload).where(models.User.id == id)
     query.execute()
     response = model_to_dict(models.User.get_by_id(id))
     return jsonify(
@@ -140,7 +85,9 @@ def update_user(id):
 @users.route("/<id>", methods=["DELETE"])
 def delete_user(id):
     query = models.User.delete().where(models.User.id == id)
+    test = models.Character.delete().where(models.Character.owner == id)
     query.execute()
+    test.execute()
     return jsonify(
         data = "User deleted",
         message = "User deleted",

@@ -10,21 +10,21 @@ import os
 
 load_dotenv()
 
-login_manager = LoginManager()
+# login_manager = LoginManager()
 
 app = Flask(__name__)
 
 app.secret_key = os.environ.get("APP_SECRET")
 
-login_manager.init_app(app)
+# login_manager.init_app(app)
 
 
-@login_manager.user_loader
-def load_user(userid):
-    try:
-        return models.User.get(models.User.id == userid)
-    except:
-        return None
+# @login_manager.user_loader
+# def load_user(userid):
+#     try:
+#         return models.User.get(models.User.id == userid)
+#     except:
+#         return None
 
 
 @app.before_request
