@@ -1,0 +1,72 @@
+from flask import Blueprint, jsonify, request
+from flask_login import login_required, current_user
+from playhouse.shortcuts import model_to_dict
+import models
+
+characters = Blueprint('characters', 'character')
+
+@characters.route("/", methods=["GET"])
+def get_all_characters():
+    characters = [model_to_dict(character) for character in models.Character.select()]
+    return jsonify(
+        data=characters, 
+        status={"code": 200, "message": "Success"})
+
+# Create character
+@characters.route("/", methods=["POST"])
+def create_character():
+    payload = request.get_json()
+    print("THEEEE PAYLOAD!!!!")
+    print(payload)
+    new_character = models.Character.create(name=payload["name"], owner=payload["id"])
+    print(new_character)
+
+    character_dict = model_to_dict(new_character)
+
+    print(character_dict)
+
+    
+    return jsonify(
+        data = character_dict,
+        message = "Character successfully created!",
+        status = 201
+    ), 201
+
+
+# Find/Show
+@characters.route('/<id>', methods=["GET"])
+def get_character(id):
+    character = models.Character.get_by_id(id)
+    print(character.__dict__)
+
+    return jsonify(
+        data = model_to_dict(character),
+        status = 200,
+        message = "Found the character"
+    ), 200
+
+
+# Update
+@characters.route("/<id>", methods=["PUT"])
+def update_character(id):
+    payload = request.get_json()
+    query = models.Character.update(**payload).where(models.Character.id == id)
+    query.execute()
+    response = model_to_dict(models.Character.get_by_id(id))
+    return jsonify(
+        data = response,
+        status = 200,
+        message = "Character updated"
+    ), 200
+
+
+# Delete
+@characters.route("/<id>", methods=["DELETE"])
+def delete_character(id):
+    query = models.Character.delete().where(models.Character.id == id)
+    query.execute()
+    return jsonify(
+        data = "Character deleted",
+        message = "Character deleted",
+        status = 200,
+    ), 200
