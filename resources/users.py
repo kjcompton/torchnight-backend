@@ -84,10 +84,9 @@ def update_user(id):
 # Delete
 @users.route("/<id>", methods=["DELETE"])
 def delete_user(id):
-    query = models.User.delete().where(models.User.id == id)
-    test = models.Character.delete().where(models.Character.owner == id)
-    query.execute()
-    test.execute()
+    # Finds the user and deletes them and their related characters
+    user = models.User.get(models.User.id == id)
+    user.delete_instance(recursive=True)
     return jsonify(
         data = "User deleted",
         message = "User deleted",

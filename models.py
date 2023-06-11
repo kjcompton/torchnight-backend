@@ -2,11 +2,13 @@ from peewee import *
 import os
 from playhouse.db_url import connect
 import datetime
+# test
+# test test test test test
+# Local 
+# DATABASE = SqliteDatabase('test.sqlite')
 
-# Local
-DATABASE = SqliteDatabase('test.sqlite')
-
-# DATABASE = connect(os.environ.get('DATABASE_URL') or 'sqlite:///test.sqlite')
+# Added the Database URL env
+DATABASE = connect(os.environ.get('DATABASE_URL') or 'sqlite:///test.sqlite')
 # Connect to the database URL defined in the environment, falling
 # back to a local Sqlite database if no database URL is specified.
 
