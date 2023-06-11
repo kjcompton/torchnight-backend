@@ -16,25 +16,16 @@ app = Flask(__name__)
 
 app.secret_key = os.environ.get("APP_SECRET")
 
-# login_manager.init_app(app)
 
-
-# @login_manager.user_loader
-# def load_user(userid):
-#     try:
-#         return models.User.get(models.User.id == userid)
-#     except:
-#         return None
 
 
 @app.before_request
 def before_request():
-    g.db = models.DATABASE
-    g.db.connect()
+    models.DATABASE.connect()
 
     @after_this_request
     def after_request(response):
-        g.db.close()
+        models.DATABASE.close()
         return response
 
 
@@ -44,10 +35,10 @@ def index():
     return 'Server is running'
 
 
-CORS(users, origins=['http://localhost:3000'], supports_credentials=True)
+CORS(users, origins=['http://localhost:5173'], supports_credentials=True)
 app.register_blueprint(users, url_prefix='/api/v1/users')
 
-CORS(characters, origins=['http://localhost:3000'], supports_credentials=True)
+CORS(characters, origins=['http://localhost:5173'], supports_credentials=True)
 app.register_blueprint(characters, url_prefix='/api/v1/characters')
 
 
