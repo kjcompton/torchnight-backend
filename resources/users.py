@@ -22,7 +22,7 @@ def register():
     payload = request.get_json()
 
     payload["email"] = payload["email"].lower()
-    payload["username"] = payload["username"].lower()\
+    payload["username"] = payload["username"].lower()
     
     try:
         models.User.get(models.User.email == payload["email"])
@@ -53,6 +53,62 @@ def register():
             message = f"Registered user: {created_user_dict['email']}",
             status = 201
         ), 201
+    
+# Log In
+@users.route("/login", methods=["GET"])
+def login():
+    print(request.url)
+    print(request.args.get('email'))
+    print(request.args.get('password'))
+    email = request.args.get('email').lower()
+    password = request.args.get('password')
+    try:
+        models.User.get(models.User.email == email)
+        print("Found email")
+        found_user = models.User.get(models.User.email == email)
+        newUser = model_to_dict(found_user)
+        if newUser["password"] == password:
+            print("Passwords Match")
+            return jsonify(
+                data = newUser,
+                message = "password match",
+                status = 201
+            ), 201
+        else:
+            print("Passwords DONT Match")
+            return jsonify(
+                data = "password no match",
+                message = "password no match",
+                status = 201
+            ), 201
+        # print(found_user["email"])
+        # print(found_user["password"])
+        # print(payload["password"])
+
+        # return jsonify(
+        #     data = "User found",
+        #     message = "User found",
+        #     status = 201
+        # ), 201
+    except models.DoesNotExist:
+        print("Did not find")
+        return jsonify(
+            data = 'User doesnt exist',
+            message = 'User doesnt exist',
+            status = 201
+        ), 201
+
+    # try:
+    #     models.User.get(models.User.email == payload["email"])
+    #     user = models.User.get(models.User.email == payload["email"])
+    #     print()
+    #     return jsonify(
+    #         data = user,
+    #         message = "A user with that email already exists",
+    #         status = 401
+    #     ), 401
+    # except:
+        
 
 # Find/Show
 @users.route('/<id>', methods=["GET"])
@@ -65,6 +121,8 @@ def get_user(id):
         status = 200,
         message = "success"
     ), 200
+
+
 
 
 # Update
