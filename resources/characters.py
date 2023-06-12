@@ -4,7 +4,7 @@ from playhouse.shortcuts import model_to_dict
 import models
 
 characters = Blueprint('characters', 'character')
-
+# All Characters
 @characters.route("/", methods=["GET"])
 def get_all_characters():
     characters = [model_to_dict(character) for character in models.Character.select()]
@@ -12,13 +12,45 @@ def get_all_characters():
         data=characters, 
         status={"code": 200, "message": "Success"})
 
+
+# Characters by owner
+@characters.route("/test/<id>", methods=["GET"])
+def get_characters_by_owner(id):
+    # Join query to find all characters with the user id
+    query = models.Character.select().join(models.User).where(models.User.id == id)
+    characters = [model_to_dict(character) for character in query]
+    return jsonify(
+        data=characters, 
+        status={"code": 200, "message": "Success"})
+
+
 # Create character
 @characters.route("/", methods=["POST"])
 def create_character():
     payload = request.get_json()
-    print("THEEEE PAYLOAD!!!!")
-    print(payload)
-    new_character = models.Character.create(name=payload["name"], owner=payload["id"])
+    new_character = models.Character.create(
+        owner=payload["id"], 
+        name=payload["name"],
+        image=payload["image"],
+        characterClass=payload["characterClass"],
+        level=payload["level"],
+        xp=payload["xp"],
+        hp=payload["hp"],
+        mp=payload["mp"],
+        strength=payload["strength"],
+        dexterity=payload["dexterity"],
+        intelligence=payload["intelligence"],
+        helm=payload["helm"],
+        chest=payload["chest"],
+        gloves=payload["gloves"],
+        boots=payload["boots"],
+        ring=payload["ring"],
+        item1=payload["item1"],
+        item2=payload["item2"],
+        item3=payload["item3"],
+        item4=payload["item4"],
+        item5=payload["item5"]
+    )
     print(new_character)
 
     character_dict = model_to_dict(new_character)

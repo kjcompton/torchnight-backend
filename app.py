@@ -34,11 +34,11 @@ def before_request():
 def index():
     return 'Server is running'
 
-
-CORS(users, origins=['http://localhost:5173'], supports_credentials=True)
+CORS(app)
+# CORS(users, origins=['http://localhost:5173'], supports_credentials=True)
 app.register_blueprint(users, url_prefix='/api/v1/users')
 
-CORS(characters, origins=['http://localhost:5173'], supports_credentials=True)
+# CORS(characters, origins=['http://localhost:5173'], supports_credentials=True)
 app.register_blueprint(characters, url_prefix='/api/v1/characters')
 
 

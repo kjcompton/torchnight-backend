@@ -22,9 +22,29 @@ class User( Model):
     class Meta:
         database = DATABASE
 
+
 class Character(Model):
-    name = CharField()
     owner = ForeignKeyField(User, backref='characters')
+    name = CharField()
+    image = CharField()
+    characterClass = CharField()
+    level = IntegerField()
+    xp = IntegerField()
+    hp = IntegerField()
+    mp = IntegerField()
+    strength = IntegerField()
+    dexterity = IntegerField()
+    intelligence = IntegerField()
+    helm = CharField()
+    chest = CharField()
+    gloves = CharField()
+    boots = CharField()
+    ring = CharField()
+    item1 = CharField()
+    item2 = CharField()
+    item3 = CharField()
+    item4 = CharField()
+    item5 = CharField()
 
     class Meta:
         database = DATABASE
