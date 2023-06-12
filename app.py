@@ -8,6 +8,7 @@ from resources.characters import characters
 import models
 import os
 
+# Test
 load_dotenv()
 
 # login_manager = LoginManager()
