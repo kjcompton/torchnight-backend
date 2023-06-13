@@ -38,7 +38,8 @@ def register():
         created_user = models.User.create(
             username = payload["username"],
             email = payload["email"],
-            password = pw_hash            
+            password = pw_hash,
+            gold = payload["gold"]      
         )
 
 

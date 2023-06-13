@@ -18,6 +18,7 @@ class User( Model):
     username = CharField(unique=True)
     email = CharField(unique=True)
     password = CharField()
+    gold = IntegerField()
 
     class Meta:
         database = DATABASE
@@ -38,6 +39,7 @@ class Character(Model):
     helm = CharField()
     chest = CharField()
     gloves = CharField()
+    weapon = CharField()
     boots = CharField()
     ring = CharField()
     item1 = CharField()

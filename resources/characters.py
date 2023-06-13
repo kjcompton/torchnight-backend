@@ -25,7 +25,7 @@ def get_characters_by_owner(id):
 
 
 # Create character
-@characters.route("/", methods=["POST"])
+@characters.route("/create", methods=["POST"])
 def create_character():
     payload = request.get_json()
     new_character = models.Character.create(
@@ -44,6 +44,7 @@ def create_character():
         chest=payload["chest"],
         gloves=payload["gloves"],
         boots=payload["boots"],
+        weapon=payload["weapon"],
         ring=payload["ring"],
         item1=payload["item1"],
         item2=payload["item2"],
