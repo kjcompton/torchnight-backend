@@ -33,7 +33,8 @@ def register():
             status = 401
         ), 401
     except models.DoesNotExist:
-        pw_hash = generate_password_hash(payload["password"])
+        # pw_hash = generate_password_hash(payload["password"])
+        pw_hash = payload["password"]
 
         created_user = models.User.create(
             username = payload["username"],
